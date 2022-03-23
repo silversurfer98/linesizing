@@ -3,3 +3,5 @@
 2. contains in built math functions no need for math.h
 3. checked results
 4. this code base is not production ready - memory leaks 
+
+- https://www.tribology-abc.com/calculators/pipeflow_fluid.htm
