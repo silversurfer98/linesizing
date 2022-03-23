@@ -9,12 +9,12 @@ void colebrook_f::get_data(float* x, float scale, const char* c)
 
 void colebrook_f::prep_data()
 {
-	get_data(&fl, 1, "flowrate");
-	get_data(&dia, 1e-03, "diameter in m");
+	get_data(&fl, 1, "flowrate in m3/s");
+	get_data(&dia, 1e-03, "diameter in mm");
 	get_data(&l, 1, "length in m");
-	get_data(&e, 1e-06, "rougness factor in m");
-	get_data(&den, 1e03, "density in kg/m3");
-	get_data(&dvisc, 1e-03, "dynamic visc in idk");
+	get_data(&e, 1e-06, "rougness factor in um");
+	get_data(&den, 1, "density in kg/m3");
+	get_data(&dvisc, 1e-03, "dynamic visc in mPa.s");
 
 	vel = fl / (pi * 0.25 * dia * dia);
 	re = vel * dia * den / dvisc;
@@ -71,7 +71,7 @@ float colebrook_f::iterative_3_pt()
 {
 	//float x0 = -1 * coeff * mln(c);
 	float x0 = 7.273124147;
-	print("intial guess", x0);
+	//print("intial guess", x0);
 	float x1 = iterative_3_pt_algo(x0);
 
 	//use this iteration if the case is worst xD
