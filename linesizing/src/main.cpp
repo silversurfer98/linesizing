@@ -11,7 +11,7 @@ int main()
 	f.initialize();
 	f.report();
 
-	std::cout << "Wanna play with dia ----- >  ";
+	std::cout << "Wanna play with dia put any num other than 0 ----- >  ";
 	uint16_t ch = 0;
 	std::cin >> ch;
 	while (ch != 0)

@@ -2,19 +2,29 @@
 
 void colebrook_f::get_data(float* x, float scale, const char* c)
 {
+
 	std::cout << "Enter the " << c <<" : ";
 	std::cin >> *x;
+	while (std::cin.fail())
+    {
+        std::cin.clear(); // clear input buffer to restore cin to a usable state
+        std::cin.ignore(); // ignore last input
+        std::cout << "You can only enter numbers.\n";
+        std::cout << "Enter the " << c <<" : ";
+        std::cin >> *x;
+    }
+
 	*x = *x * scale;
 }
 
 void colebrook_f::prep_data()
 {
-	get_data(&fl, 1, "flowrate in m3/s");
-	get_data(&dia, 1e-03, "diameter in mm");
-	get_data(&l, 1, "length in m");
-	get_data(&e, 1e-06, "rougness factor in um");
+	get_data(&fl, 2.77778e-04, "flowrate in m3/hr");
+	get_data(&dia, 25.4, "diameter in inch");
+	get_data(&l, 1, "equivalent length in m");
+	get_data(&e, 1e-03, "rougness factor in mm");
 	get_data(&den, 1, "density in kg/m3");
-	get_data(&dvisc, 1e-03, "dynamic visc in cP (1 cP is  0.001 Pa.s)");
+	get_data(&dvisc, 1e-03, "dynamic visc in cP (0.001 Pa.s --> 1 cP)");
 
 }
 
@@ -112,14 +122,12 @@ float colebrook_f::p_drop(float f)
 
 void colebrook_f::report()
 {
-	std::cout << " \n\n enter the method to solve : \n1. 3 point iteration\n2. newton raphson\nEnter ur choice : ";
-	uint16_t ch = 0;
-	std::cin >> ch;
 	float fric_factor = 0;
 	float pdrop = 0;
-	if (ch == 1)
+	if(re<2000)
 	{
-		fric_factor = iterative_3_pt();
+		std::cout<<"\n\n ------- The flow is laminar no need for complex f calc ------- \n\n";
+		fric_factor = 64/re;
 		pdrop = p_drop(fric_factor);
 
 		std::cout << "\n\n************** RESULTS ********************\n";
@@ -130,27 +138,51 @@ void colebrook_f::report()
 		//std::cout << "pressure drop is " << pdrop * 1e-05 << " in bar\n\n";
 		std::cout << "\npressure drop is " << pdrop << " in pascal";
 		std::cout << "\n*******************************************\n\n";
-
+		
 	}
 
-	else if (ch == 2)
-	{
-		fric_factor = newton_raphson();
-		pdrop = p_drop(fric_factor);
-
-		std::cout << "************** RESULTS ********************\n";
-		std::cout << "\n\nDiameter in m : " << dia;
-		std::cout << "\nVelocity in m/s : " << vel;
-		std::cout << "\nfriction factor : " << fric_factor;
-		std::cout << "\nReynold number : " << re;
-		//std::cout << "pressure drop is " << pdrop * 1e-05 << " in bar\n\n";
-		std::cout << "\npressure drop is " << pdrop << " in pascal";
-		std::cout << "\n*******************************************\n\n";
-
-	}
 	else
 	{
-		std::cout << "\n\nwaathaaa\n\n\n";
-		report();
+		std::cout<<"\n ----- flow is obviously turbulent / transition state -----\n";
+		std::cout << " \n\n enter the method to solve : \n1. 3 point iteration\n2. newton raphson\nEnter ur choice : ";
+		uint16_t ch = 0;
+		std::cin >> ch;
+
+		if (ch == 1)
+		{
+			fric_factor = iterative_3_pt();
+			pdrop = p_drop(fric_factor);
+
+			std::cout << "\n\n************** RESULTS ********************\n";
+			std::cout << "Diameter in m : " << dia;
+			std::cout << "\nVelocity in m/s : " << vel;
+			std::cout << "\nfriction factor : " << fric_factor;
+			std::cout << "\nReynold number : " << re;
+			//std::cout << "pressure drop is " << pdrop * 1e-05 << " in bar\n\n";
+			std::cout << "\npressure drop is " << pdrop << " in pascal";
+			std::cout << "\n*******************************************\n\n";
+
+		}
+
+		else if (ch == 2)
+		{
+			fric_factor = newton_raphson();
+			pdrop = p_drop(fric_factor);
+
+			std::cout << "************** RESULTS ********************\n";
+			std::cout << "\n\nDiameter in m : " << dia;
+			std::cout << "\nVelocity in m/s : " << vel;
+			std::cout << "\nfriction factor : " << fric_factor;
+			std::cout << "\nReynold number : " << re;
+			//std::cout << "pressure drop is " << pdrop * 1e-05 << " in bar\n\n";
+			std::cout << "\npressure drop is " << pdrop << " in pascal";
+			std::cout << "\n*******************************************\n\n";
+
+		}
+		else
+		{
+			std::cout << "\n\nwaathaaa\n\n\n";
+			report();
+		}
 	}
 }
