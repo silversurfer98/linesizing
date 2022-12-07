@@ -7,6 +7,7 @@ class colebrook_f
 public:
 	float fl, dia, l, e, den, dvisc, pi = 3.14159265359;
 	float vel, re, c, r;
+	float g = 9.80665;
 	//float coeff = 0.8685889638;   // 2 / ln 10
 
 	//float f; // the battle is for this

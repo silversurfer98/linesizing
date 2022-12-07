@@ -20,7 +20,7 @@ void colebrook_f::get_data(float* x, float scale, const char* c)
 void colebrook_f::prep_data()
 {
 	get_data(&fl, 2.77778e-04, "flowrate in m3/hr");
-	get_data(&dia, 25.4, "diameter in inch");
+	get_data(&dia, 0.0254, "diameter in inch");
 	get_data(&l, 1, "equivalent length in m");
 	get_data(&e, 1e-03, "rougness factor in mm");
 	get_data(&den, 1, "density in kg/m3");
@@ -124,11 +124,13 @@ void colebrook_f::report()
 {
 	float fric_factor = 0;
 	float pdrop = 0;
+	float head_loss = 0;
 	if(re<2000)
 	{
 		std::cout<<"\n\n ------- The flow is laminar no need for complex f calc ------- \n\n";
 		fric_factor = 64/re;
 		pdrop = p_drop(fric_factor);
+		head_loss = pdrop / (den * g);
 
 		std::cout << "\n\n************** RESULTS ********************\n";
 		std::cout << "Diameter in m : " << dia;
@@ -136,7 +138,8 @@ void colebrook_f::report()
 		std::cout << "\nfriction factor : " << fric_factor;
 		std::cout << "\nReynold number : " << re;
 		//std::cout << "pressure drop is " << pdrop * 1e-05 << " in bar\n\n";
-		std::cout << "\npressure drop is " << pdrop << " in pascal";
+		std::cout << "\npressure drop is " << pdrop << " in pascal or "<<pdrop*1e-05<<" in Bar\n";
+		std::cout << "loss as liq height in m: " << head_loss;
 		std::cout << "\n*******************************************\n\n";
 		
 	}
@@ -152,6 +155,7 @@ void colebrook_f::report()
 		{
 			fric_factor = iterative_3_pt();
 			pdrop = p_drop(fric_factor);
+			head_loss = pdrop / (den * g);
 
 			std::cout << "\n\n************** RESULTS ********************\n";
 			std::cout << "Diameter in m : " << dia;
@@ -159,7 +163,8 @@ void colebrook_f::report()
 			std::cout << "\nfriction factor : " << fric_factor;
 			std::cout << "\nReynold number : " << re;
 			//std::cout << "pressure drop is " << pdrop * 1e-05 << " in bar\n\n";
-			std::cout << "\npressure drop is " << pdrop << " in pascal";
+			std::cout << "\npressure drop is " << pdrop << " in pascal or " << pdrop * 1e-05 << " in Bar\n";
+			std::cout << "loss as liq height is m: " << head_loss;
 			std::cout << "\n*******************************************\n\n";
 
 		}
@@ -168,6 +173,7 @@ void colebrook_f::report()
 		{
 			fric_factor = newton_raphson();
 			pdrop = p_drop(fric_factor);
+			head_loss = pdrop / (den * g);
 
 			std::cout << "************** RESULTS ********************\n";
 			std::cout << "\n\nDiameter in m : " << dia;
@@ -175,13 +181,14 @@ void colebrook_f::report()
 			std::cout << "\nfriction factor : " << fric_factor;
 			std::cout << "\nReynold number : " << re;
 			//std::cout << "pressure drop is " << pdrop * 1e-05 << " in bar\n\n";
-			std::cout << "\npressure drop is " << pdrop << " in pascal";
+			std::cout << "\npressure drop is " << pdrop << " in pascal or " << pdrop * 1e-05 << " in Bar\n";
+			std::cout << "loss as liq height as m : " << head_loss;
 			std::cout << "\n*******************************************\n\n";
 
 		}
 		else
 		{
-			std::cout << "\n\nwaathaaa\n\n\n";
+			std::cout << "\n\npoda de loosu payale\n\n\n";
 			report();
 		}
 	}

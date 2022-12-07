@@ -16,7 +16,7 @@ int main()
 	std::cin >> ch;
 	while (ch != 0)
 	{
-		f.get_data(&f.dia, 1e-03, "new diameter in mm");
+		f.get_data(&f.dia, 0.0254, "new diameter in inch");
 		f.initialize();
 		f.report();
 
